@@ -1,0 +1,21 @@
+﻿  pch.cpp
+  Dll1.cpp
+  dllmain.cpp
+  Generating Code...
+C:\Users\bubli\OneDrive\Desktop\Assignment3\Dll1\Dll1.cpp(7,13): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file '/Dll1.cpp')
+  
+C:\Users\bubli\OneDrive\Desktop\Assignment3\Dll1\Dll1.cpp(11,28): error C3861: 'encryptChar': identifier not found
+  (compiling source file '/Dll1.cpp')
+  
+C:\Users\bubli\OneDrive\Desktop\Assignment3\Dll1\Dll1.cpp(19,13): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file '/Dll1.cpp')
+  
+C:\Users\bubli\OneDrive\Desktop\Assignment3\Dll1\Dll1.cpp(23,28): error C3861: 'decryptChar': identifier not found
+  (compiling source file '/Dll1.cpp')
+  
+C:\Users\bubli\OneDrive\Desktop\Assignment3\Dll1\dllmain.cpp(4,1): warning C4005: 'DECRYPTIONDLL_API': macro redefinition
+  C:\Users\bubli\OneDrive\Desktop\Assignment3\Dll1\dllmain.cpp(2,1):
+  see previous definition of 'DECRYPTIONDLL_API'
+  
+C:\Users\bubli\OneDrive\Desktop\Assignment3\Dll1\dllmain.cpp(12,1): error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
