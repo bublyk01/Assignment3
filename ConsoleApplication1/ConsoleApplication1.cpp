@@ -1,68 +1,46 @@
 #include <iostream>
-#include <cstring>
+#include <windows.h>
 
-char* encrypt(char* rawText, int key);
-char* decrypt(char* encryptedText, int key);
-
-char encryptChar(char ch, int key) {
-    if (ch >= 'a' && ch <= 'z') {
-        return 'a' + (ch - 'a' + key) % 26;
-    }
-    else if (ch >= 'A' && ch <= 'Z') {
-        return 'A' + (ch - 'A' + key) % 26;
-    }
-    else {
-        return ch;
-    }
-}
-
-char decryptChar(char ch, int key) {
-    if (ch >= 'a' && ch <= 'z') {
-        return 'a' + (ch - 'a' - key + 26) % 26;
-    }
-    else if (ch >= 'A' && ch <= 'Z') {
-        return 'A' + (ch - 'A' - key + 26) % 26;
-    }
-    else {
-        return ch;
-    }
-}
-
-char* encrypt(char* rawText, int key) {
-    int len = std::strlen(rawText);
-    char* encryptedText = new char[len + 1];
-
-    for (int i = 0; i < len; ++i) {
-        encryptedText[i] = encryptChar(rawText[i], key);
-    }
-    encryptedText[len] = '\0';
-
-    return encryptedText;
-}
-
-char* decrypt(char* encryptedText, int key) {
-    int len = std::strlen(encryptedText);
-    char* decryptedText = new char[len + 1];
-
-    for (int i = 0; i < len; ++i) {
-        decryptedText[i] = decryptChar(encryptedText[i], key);
-    }
-    decryptedText[len] = '\0';
-
-    return decryptedText;
-}
+typedef char* (__cdecl* EncryptFunc)(char*, int);
+typedef char* (__cdecl* DecryptFunc)(char*, int);
 
 int main() {
-    char text[] = "Hello, World!";
+    HINSTANCE hDll = LoadLibrary(TEXT("Dll1.dll"));
+    if (hDll == NULL) {
+        std::cerr << "Could not find the DLL." << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    EncryptFunc encrypt = (EncryptFunc)GetProcAddress(hDll, "encrypt");
+    DecryptFunc decrypt = (DecryptFunc)GetProcAddress(hDll, "decrypt");
+
+    if (!encrypt || !decrypt) {
+        std::cerr << "Could not find the functions." << std::endl;
+        FreeLibrary(hDll);
+        return EXIT_FAILURE;
+    }
+
+    char phrase[] = "Hello, world!";
     int key = 1;
-    char* encrypted = encrypt(text, key);
-    std::cout << "Encrypted Text: " << encrypted << std::endl;
 
-    char* decrypted = decrypt(encrypted, key);
-    std::cout << "Decrypted Text: " << decrypted << std::endl;
+    char* encryptedText = encrypt(phrase, key);
+    if (encryptedText) {
+        std::cout << "Encrypted Text: " << encryptedText << std::endl;
+    }
+    else {
+        std::cerr << "Could not encrypt" << std::endl;
+    }
 
-    delete[] encrypted;
-    delete[] decrypted;
+    char* decryptedText = decrypt(encryptedText, key);
+    if (decryptedText) {
+        std::cout << "Decrypted Text: " << decryptedText << std::endl;
+        delete[] decryptedText;
+    }
+    else {
+        std::cerr << "Could not decrypt." << std::endl;
+    }
 
-    return 0;
+    delete[] encryptedText;
+    FreeLibrary(hDll);
+    return EXIT_SUCCESS;
 }
